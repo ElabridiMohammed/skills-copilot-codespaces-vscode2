@@ -1,34 +1,18 @@
-//create web server
+// Create web server 
 
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
-
-const hostname = 'medium.com';
-const port = 80;
+const port = 3000;
 
 const server = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/comments') {
-    const filePath = path.join(__dirname, 'comments.json');
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        res.statusCode = 500;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ error: 'Failed to read comments' }));
-      } else {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(data);
-      }
-    });
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Not Found' }));
-  }
+    if (req.method === 'GET' && req.url === '/comments') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        const comments = [
+            { id: 1, text: 'This is the first comment.' },
+            { id: 2, text: 'This is the second comment.' }
+        ];
+        res.end(JSON.stringify(comments));
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not Found');
+    }
 });
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-
